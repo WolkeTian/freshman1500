@@ -5,10 +5,10 @@ spm('Defaults','fMRI');
 spm_jobman('initcfg');
 % clear matlabbatch
 %% unzip all fieldmap nii.gz files
-% niigzs = spm_select('FPListRec', direc, '.*gre_field_mapping_2mm_rest.*\.nii\.gz$'); % »ñÈ¡ËùÓĞ³¡Í¼.nii.gzÎÄ¼şµÄÂ·¾¶
+% niigzs = spm_select('FPListRec', direc, '.*gre_field_mapping_2mm_rest.*\.nii\.gz$'); % è·å–æ‰€æœ‰åœºå›¾.nii.gzæ–‡ä»¶çš„è·¯å¾„
 % niigzs = cellstr(niigzs);
 % tic;cellfun(@gunzip, niigzs);toc;
-% niigzs = spm_select('FPListRec', direc, '.*t1_mprage.*\.nii\.gz$'); % »ñÈ¡ËùÓĞ½á¹¹Ïñ.nii.gzÎÄ¼şµÄÂ·¾¶
+% niigzs = spm_select('FPListRec', direc, '.*t1_mprage.*\.nii\.gz$'); % è·å–æ‰€æœ‰ç»“æ„åƒ.nii.gzæ–‡ä»¶çš„è·¯å¾„
 % niigzs = cellstr(niigzs);
 % tic;cellfun(@gunzip, niigzs);toc;
 %% parameters
@@ -17,14 +17,14 @@ spm_jobman('initcfg');
 
 %% prepare matlabbatch
 fprintf('%-40s:', 'Preparing spm batch...');
-restfiles = cellstr(spm_select('ExtFPListRec', direc, '^a.*sms_bold_2mm.*\.nii$',Inf)); %  »ñÈ¡Ê±¼ä²ãĞ£ÕıºóµÄËùÓĞ¾²Ï¢Ì¬.4d niiÎÄ¼şµÄÂ·¾¶(°üº¬ËùÓĞÖ¡£©
+restfiles = cellstr(spm_select('ExtFPListRec', direc, '^a.*sms_bold_2mm.*\.nii$',Inf)); %  è·å–æ—¶é—´å±‚æ ¡æ­£åçš„æ‰€æœ‰é™æ¯æ€.4d niiæ–‡ä»¶çš„è·¯å¾„(åŒ…å«æ‰€æœ‰å¸§ï¼‰
 
-fmapfiles = cellstr(spm_select('ExtFPListRec', direc, '^2019.*gre_field_mapping_2mm_rest.*\.nii$')); % »ñÈ¡ËùÓĞ³¡Í¼É¨ÃèÉ¨ÃèÎÄ¼şµÄÂ·¾¶
-magfiles = fmapfiles(1:3:end); % »ñÈ¡¶Ìte magnitudeÍ¼µÄÂ·¾¶
-phasefiles = fmapfiles(3:3:end); % »ñÈ¡ÏàÎ»²îÍ¼µÄÂ·¾¶
+fmapfiles = cellstr(spm_select('ExtFPListRec', direc, '^2019.*gre_field_mapping_2mm_rest.*\.nii$')); % è·å–æ‰€æœ‰åœºå›¾æ‰«ææ‰«ææ–‡ä»¶çš„è·¯å¾„
+magfiles = fmapfiles(1:3:end); % è·å–çŸ­te magnitudeå›¾çš„è·¯å¾„
+phasefiles = fmapfiles(3:3:end); % è·å–ç›¸ä½å·®å›¾çš„è·¯å¾„
 
-% magfiles = cellstr(spm_select('ExtFPListRec', direc, '.*gre_field_mapping_2mm_rest.*e1\.nii$')); % »ñÈ¡¶Ìte magnitudeÍ¼µÄÂ·¾¶
-% phasefiles = cellstr(spm_select('ExtFPListRec', direc, '.*gre_field_mapping_2mm_rest.*ph\.nii$')); % »ñÈ¡ÏàÎ»²îÍ¼µÄÂ·¾¶
+% magfiles = cellstr(spm_select('ExtFPListRec', direc, '.*gre_field_mapping_2mm_rest.*e1\.nii$')); % è·å–çŸ­te magnitudeå›¾çš„è·¯å¾„
+% phasefiles = cellstr(spm_select('ExtFPListRec', direc, '.*gre_field_mapping_2mm_rest.*ph\.nii$')); % è·å–ç›¸ä½å·®å›¾çš„è·¯å¾„
 anatfiles = cellstr(spm_select('ExtFPListRec', direc, '.*t1_mprage.*\.nii$'));
 
 %% create spm batch
@@ -37,7 +37,7 @@ for i = 1:numel(magfiles)
     matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.data.presubphasemag.phase = subith_phasefile;
     matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.data.presubphasemag.magnitude = subith_magfile;
     matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.defaults.defaultsval.et = [4.92 7.38];
-    matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.defaults.defaultsval.maskbrain = 1;
+    matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.defaults.defaultsval.maskbrain = 0;
     matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.defaults.defaultsval.blipdir = 1;
     matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.defaults.defaultsval.tert = 29.9698;
     matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.defaults.defaultsval.epifm = 0;
@@ -60,7 +60,7 @@ for i = 1:numel(magfiles)
     matlabbatch{i}.spm.tools.fieldmap.calculatevdm.subj.matchanat = 0;
     
 end
-%% ´¢´æbatchÎÄ¼ş
+%% å‚¨å­˜batchæ–‡ä»¶
 save('filedmap.mat','matlabbatch');
 %% excute matlabbatch
 
@@ -76,7 +76,7 @@ parfor i = 1:numel(magfiles)
 end
 toc;
 
-%% ÓĞ25¸ö±»ÊÔÔÚÊ¹ÓÃmagnitudeÍ¼ÖÆ×÷mask¹ı³ÌÖĞ±¨´í£¬µ÷ÕûÆäÉèÖÃÎª0£¨²»mask£©£¬ÎŞÊµÖÊÓ°Ïì
+%% æœ‰25ä¸ªè¢«è¯•åœ¨ä½¿ç”¨magnitudeå›¾åˆ¶ä½œmaskè¿‡ç¨‹ä¸­æŠ¥é”™ï¼Œè°ƒæ•´å…¶è®¾ç½®ä¸º0ï¼ˆä¸maskï¼‰ï¼Œæ— å®è´¨å½±å“
 failed = cellfun(@(x) isequal(x,'failed'), out);
 newbatch = matlabbatch(failed);
 for i = 1:numel(newbatch)
@@ -135,4 +135,4 @@ parfor i = 1:numel(magfiles)
 end
 toc;
 
-% cellfun(@(x) isequal(x,'failed'), out2) % ²éÕÒÊ§°Ü±»ÊÔ
+% cellfun(@(x) isequal(x,'failed'), out2) % æŸ¥æ‰¾å¤±è´¥è¢«è¯•
