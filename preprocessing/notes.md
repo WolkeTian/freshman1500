@@ -7,3 +7,4 @@ segmentation
 Check func & anat registration
 Dartel create template
 func normalise to MNI space (by Dartel) & smooth
+check func normalise
