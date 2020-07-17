@@ -3,10 +3,10 @@ path = 'H:\';
 tic;
 
 %% prepration
-% 取出被试文件夹的文件名
+% obtain subfolder names
 folders = dir([path,'\SUB*']);
 folders = struct2cell(folders);
-names = folders(1,:)'; % 此行为每个被试数据的文件名的cell
+names = folders(1,:)'; % cell of every subfolders' name
 % 按照'_'切分，正确格式下SUB01736_JINDIE_01736切分为3个cell，然后取出末尾的被试编号
 subids = cellfun(@(x) split(x,'_'),names,'UniformOutput', false); 
 subids = cellfun(@(x) x{end}, subids, 'UniformOutput', false);
@@ -29,19 +29,19 @@ parfor i = 1:numel(subids)
             subpath = [path,'\',names{i}];
             child_dir = dir([subpath,'\SWU*']);
             child_fullpath = [child_dir(end,1).folder, '\', child_dir(end,1).name]; % 获取17个fmri文件的上级文件目录
-            % 获取静息态路径
+            % obtain resting-state path
             rest_dir = dir([child_fullpath,'\*BOLD*REST*']);
             rest_fullpath = [rest_dir(end,1).folder,'\', rest_dir(end,1).name];
-            % 获取静息态场图路径
+            % obtain resting-state fieldmaps path
             fmap_dir = dir([child_fullpath,'\*FIELD_MAPPING*REST*']);
             fmap1_fullpath = [fmap_dir(1,1).folder,'\', fmap_dir(1,1).name];
             fmap2_fullpath = [fmap_dir(2,1).folder,'\', fmap_dir(2,1).name];
-            % 获取结构像路径
+            % obtain anat path
             t1_dir = dir([child_fullpath,'\T1_MPRAGE*']);
             t1_fullpath = [t1_dir(end,1).folder,'\', t1_dir(end,1).name];
 
-            %% 写入部分
-            % 创建文件夹
+            %% part of writting
+            % create destination folder
             topath = 'F:\fMRI1500\Niftis\';
             tosubpath = [topath, 'Sub', subids{i}];
             mkdir(tosubpath);
@@ -55,19 +55,19 @@ parfor i = 1:numel(subids)
             % cmd格式: Dcm2niix路径  option 输出文件夹 文件名 输入文件夹
             % 如："D:\Programs\mricrogl\dcm2niix" -b y -z y -o E:\prisma_prep_data\dpabi_test\FunImg\sub01...
             % -f "%t_%p_%s" E:\prisma_prep_data\dpabi_test\FunRaw\sub01
-            % 转换静息态
+            % convert rest-states images
             thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', torestpath, ' -f "%t_%p_%s" ', rest_fullpath];
             [~,~] = dos(thecommand); % [status,cmdout] = dos(command); 避免输出
-             % 转换任务态
+             % convert anat images
             thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', tot1path, ' -f "%t_%p_%s" ', t1_fullpath];
             [~,~] = dos(thecommand);
-            % 转换场图
+            % convert filedmaps images
             thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', tofmap1path, ' -f "%t_%p_%s" ', fmap1_fullpath];
             [~,~] = dos(thecommand);
             thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', tofmap2path, ' -f "%t_%p_%s" ', fmap2_fullpath];
             [~,~] = dos(thecommand);
 
-            % 显示成功信息
+            % display successful information 
             disp(['Sub',subids{i},' converted successfully']);
         end
        
@@ -77,7 +77,7 @@ end
 
 toc;
 
-%% 检查是否转换文件数量正常
+%% Check if the number of converted files is normal
 for i = 1:numel(subids)
     if strcmp(subids{i}, '00646') || strcmp(subids{i}, '00170') % 两个数据不全的被试跳过
         continue
