@@ -9,10 +9,10 @@ spm_jobman('initcfg');
 %% prepare matlabbatch
 fprintf('%-40s:', 'Preparing spm batch...');
 preprocessed = cellstr(spm_select('ExtFPListRec', direc, '^swua.*sms_bold_2mm.*\.nii$',1)); 
-%  获取时间层校正场图校正以及头动校正后的数据的平均图像
+%  obtain all preprocessed images
 
 gmfiles = cellstr(spm_select('ExtFPListRec', direc, '^c120.*t1_mprage.*\.nii$'));
-% 获取所有解剖图像
+% obtain all gray matter images
 
 subfolders = dir('F:\fMRI1500\Niftis\Sub*');
 topath = 'F:\fMRI1500\CheckNormalise\';
