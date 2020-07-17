@@ -5,21 +5,21 @@ spm('Defaults','fMRI');
 spm_jobman('initcfg');
 
 %% unzip all rest nii.gz files
-% niigzs = spm_select('FPListRec', direc, '.*sms_bold_2mm.*\.nii\.gz$'); % »ñÈ¡ËùÓĞ¾²Ï¢Ì¬.nii.gzÎÄ¼şµÄÂ·¾¶
+% niigzs = spm_select('FPListRec', direc, '.*sms_bold_2mm.*\.nii\.gz$'); % obtain resting-state images path
 % niigzs = cellstr(niigzs);
 % tic;cellfun(@gunzip, niigzs);toc;
 
 %% prepare matlabbatch
 fprintf('%-40s:', 'Preparing spm batch...');
-restfiles = spm_select('ExtFPListRec', direc, '.*sms_bold_2mm.*\.nii$',Inf); %  »ñÈ¡ËùÓĞ¾²Ï¢Ì¬.4d niiÎÄ¼şµÄÂ·¾¶(°üº¬ËùÓĞÖ¡£©
+restfiles = spm_select('ExtFPListRec', direc, '.*sms_bold_2mm.*\.nii$',Inf); %  obtain resting-state nifti images path(including all framesï¼‰
 restfiles = cellstr(restfiles);
 
-jsonfiles = cellstr(spm_select('FPListRec', direc, '.*sms_bold_2mm.*\.json$')); % »ñÈ¡ËùÓĞ¾²Ï¢Ì¬É¨ÃèjsonÎÄ¼şµÄÂ·¾¶
+jsonfiles = cellstr(spm_select('FPListRec', direc, '.*sms_bold_2mm.*\.json$')); % obtain resting-state json files path
 slicetimes = cellfun(@readslicetimes, jsonfiles, 'UniformOutput', false);
 
 for i = 1:numel(jsonfiles)
 %     jsonpath = jsonfiles{i}; mesg = jsonpath(1:end-5);
-%     disp(['µ±Ç°´¦ÀíÎÄ¼şÎª',mesg]); %ÏÔÊ¾µ±Ç°´¦ÀíµÄ±»ÊÔÎÄ¼ş¼Ğ£»·½±ã¾À´í
+%     disp(['The current processing file is ',mesg]); % facilitate to debug
     subith_rests = restfiles((i*240 - 239):(i*240));
     subith_stimes = slicetimes{i};
     %% spm batch
@@ -31,8 +31,8 @@ for i = 1:numel(jsonfiles)
     matlabbatch{i}.spm.temporal.st.refslice = subith_stimes(1);
     matlabbatch{i}.spm.temporal.st.prefix = 'a';
 end
-% ´¢´æbatchÎÄ¼ş
-save('slicetiming.mat','matlabbatch');
+% save batch file
+% save('slicetiming.mat','matlabbatch');
 %% excute matlabbatch
 fprintf('%-40s:', 'Excutingg spm batch...');
 tic;
