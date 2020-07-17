@@ -8,10 +8,10 @@ spm_jobman('initcfg');
 
 %% prepare matlabbatch
 fprintf('%-40s:', 'Preparing spm batch...');
-rawimages = cellstr(spm_select('ExtFPListRec', direc, '^2019.*sms_bold_2mm.*\.nii$',1)); 
-%  获取所有原始nii图像
+rawimages = cellstr(spm_select('ExtFPListRec', direc, '^20.*sms_bold_2mm.*\.nii$',1)); 
+%  obtain all func images path
 gmfiles = cellstr(spm_select('ExtFPListRec', direc, '^c120.*t1_mprage.*\.nii$'));
-% 获取所有解剖图像
+% obtain all anat images path
 
 subfolders = dir('F:\fMRI1500\Niftis\Sub*');
 topath = 'F:\fMRI1500\CheckRawNifti\';
