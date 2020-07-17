@@ -8,10 +8,10 @@ spm_jobman('initcfg');
 %% prepare matlabbatch
 fprintf('%-40s:', 'Preparing spm batch...');
 rc1files = cellstr(spm_select('ExtFPListRec', direc, '^rc1.*\.nii$')); 
-%  获取时间层校正场图校正以及头动校正后的数据的平均图像
+
 
 rc2files = cellstr(spm_select('ExtFPListRec', direc, '^rc2.*\.nii$'));
-% 获取所有解剖图像
+
 %% create batch
 matlabbatch{1}.spm.tools.dartel.warp.images = {
                                                rc1files
