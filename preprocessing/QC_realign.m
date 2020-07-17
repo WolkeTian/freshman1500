@@ -32,7 +32,7 @@ for i = 1:numel(rpfiles)
     FD = sum(abs(differential),2); % Framewise displacement (FD): sum absolute values of 6 displacement
 %     FD_fname = ['FD_files\', 'FD_', fname];
     FD_fname = 'FrameDisplacement.txt';
-    writematrix(FD, FD_fname); % fd值存储到文件
+    writematrix(FD, FD_fname); % save FD values to file
     [max_FDs(i), mean_FDs(i)] = deal(max(FD), mean(FD));
 %     All_FDs(:,i) = FD;
     %% create scrub regressors for FD >= 0.5mm 
@@ -95,7 +95,7 @@ Union_exclusions = unique([exclu_abs; exclu_meanFD; exclu_maxFD]);
 
 %% write some QA results to file
 cd(rpfiles(1,1).folder); % save to first subject's folder
-fname = 'HeadmotionQA.csv';
+fname = 'HeadmotionQC.csv';
 QAresults = table(subids, max_abs_motions, max_FDs, mean_FDs);
 writetable(QAresults, fname);
 toc;
