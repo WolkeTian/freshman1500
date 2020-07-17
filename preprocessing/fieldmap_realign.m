@@ -61,7 +61,7 @@ for i = 1:numel(magfiles)
     
 end
 %% 储存batch文件
-save('filedmap.mat','matlabbatch');
+% save('filedmap.mat','matlabbatch');
 %% excute matlabbatch
 
 parpool
@@ -76,15 +76,6 @@ parfor i = 1:numel(magfiles)
 end
 toc;
 
-%% 有25个被试在使用magnitude图制作mask过程中报错，调整其设置为0（不mask），无实质影响
-failed = cellfun(@(x) isequal(x,'failed'), out);
-newbatch = matlabbatch(failed);
-for i = 1:numel(newbatch)
-    newbatch{i}.spm.tools.fieldmap.calculatevdm.subj.defaults.defaultsval.maskbrain = 0;
-end
-
-spm_jobman('run',newbatch);
-    
     
 %% realign & warp
 clear matlabbatch
@@ -122,7 +113,7 @@ for i = 1:numel(magfiles)
     matlabbatch{i}.spm.spatial.realignunwarp.uwroptions.prefix = 'u';
 end
 
-save('realignunwarp.mat','matlabbatch');
+% save('realignunwarp.mat','matlabbatch');
 
 %% 
 tic;
