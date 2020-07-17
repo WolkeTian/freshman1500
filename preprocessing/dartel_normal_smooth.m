@@ -10,10 +10,10 @@ spm_jobman('initcfg');
 %% prepare matlabbatch
 fprintf('%-40s:', 'Preparing spm batch...');
 flowfiles = cellstr(spm_select('FPListRec', direc, '^u_rc1.*\.nii$')); 
-%  获取时间层校正场图校正以及头动校正后的数据的平均图像
+%  obtain all flow field images
 
 restfiles = cellstr(spm_select('FPListRec', direc, '^ua20.*\.nii$'));
-% 获取所有解剖图像
+% obtain all relignmented resting-state images
 
 
 
