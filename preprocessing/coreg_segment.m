@@ -9,10 +9,9 @@ spm_jobman('initcfg');
 %% prepare matlabbatch
 fprintf('%-40s:', 'Preparing spm batch...');
 meanrestfiles = cellstr(spm_select('ExtFPListRec', direc, '^meanua.*sms_bold_2mm.*\.nii$')); 
-%  获取时间层校正场图校正以及头动校正后的数据的平均图像
+
 
 anatfiles = cellstr(spm_select('ExtFPListRec', direc, '.*t1_mprage.*\.nii$'));
-% 获取所有解剖图像
 
 %% make batch
 for i = 1:numel(anatfiles)
@@ -83,4 +82,4 @@ toc;
 % end
 % toc;
 
-% cellfun(@(x) isequal(x,'failed'), out_coreg) % 查找失败被试
+% cellfun(@(x) isequal(x,'failed'), out_coreg) % find failed subject
