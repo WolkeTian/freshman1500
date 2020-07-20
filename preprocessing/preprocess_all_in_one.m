@@ -83,9 +83,9 @@ toc;
 
 %% Check if the number of converted files is normal
 for i = 1:numel(subids)
-    if strcmp(subids{i}, '00646') || strcmp(subids{i}, '00170') % 两个数据不全的被试跳过
-        continue
-    else
+    %if strcmp(subids{i}, '00646') || strcmp(subids{i}, '00170') % 两个数据不全的被试跳过
+        %continue
+    %else
         %topath = 'F:\fMRI1500\Niftis\';
         
         totestpath = [topath, 'Sub', subids{i} ,'\rest\*bold*'];
@@ -112,7 +112,7 @@ for i = 1:numel(subids)
             disp(['check ',subids{i},' fieldmap rest2 num of files ']);
         end
         
-    end
+    %end
 end
 
 
@@ -315,6 +315,8 @@ meanrestfiles = cellstr(spm_select('ExtFPListRec', direc, '^meanua.*sms_bold_2mm
 
 anatfiles = cellstr(spm_select('ExtFPListRec', direc, '.*t1_mprage.*\.nii$'));
 
+spm_path = which('spm');
+tpm_path = [spm_path(1:end-5), 'tpm\TPM.nii'];
 %% make batch
 for i = 1:numel(anatfiles)
     % coregister: estimate
@@ -331,27 +333,27 @@ for i = 1:numel(anatfiles)
     matlabbatch{i*2}.spm.spatial.preproc.channel.biasreg = 0.001;
     matlabbatch{i*2}.spm.spatial.preproc.channel.biasfwhm = 60;
     matlabbatch{i*2}.spm.spatial.preproc.channel.write = [0 0];
-    matlabbatch{i*2}.spm.spatial.preproc.tissue(1).tpm = {'D:\matlabTools\spm12\tpm\TPM.nii,1'};
+    matlabbatch{i*2}.spm.spatial.preproc.tissue(1).tpm = {[tpm_path, ',1']};
     matlabbatch{i*2}.spm.spatial.preproc.tissue(1).ngaus = 1;
     matlabbatch{i*2}.spm.spatial.preproc.tissue(1).native = [1 1]; % imported dartel rc1*.nii
     matlabbatch{i*2}.spm.spatial.preproc.tissue(1).warped = [0 0];
-    matlabbatch{i*2}.spm.spatial.preproc.tissue(2).tpm = {'D:\matlabTools\spm12\tpm\TPM.nii,2'};
+    matlabbatch{i*2}.spm.spatial.preproc.tissue(2).tpm = {[tpm_path, ',2']};
     matlabbatch{i*2}.spm.spatial.preproc.tissue(2).ngaus = 1;
     matlabbatch{i*2}.spm.spatial.preproc.tissue(2).native = [1 1]; % imported dartel rc2*.nii
     matlabbatch{i*2}.spm.spatial.preproc.tissue(2).warped = [0 0];
-    matlabbatch{i*2}.spm.spatial.preproc.tissue(3).tpm = {'D:\matlabTools\spm12\tpm\TPM.nii,3'};
+    matlabbatch{i*2}.spm.spatial.preproc.tissue(3).tpm = {[tpm_path, ',3']};
     matlabbatch{i*2}.spm.spatial.preproc.tissue(3).ngaus = 2;
     matlabbatch{i*2}.spm.spatial.preproc.tissue(3).native = [1 0];
     matlabbatch{i*2}.spm.spatial.preproc.tissue(3).warped = [0 0];
-    matlabbatch{i*2}.spm.spatial.preproc.tissue(4).tpm = {'D:\matlabTools\spm12\tpm\TPM.nii,4'};
+    matlabbatch{i*2}.spm.spatial.preproc.tissue(4).tpm = {[tpm_path, ',4']};
     matlabbatch{i*2}.spm.spatial.preproc.tissue(4).ngaus = 3;
     matlabbatch{i*2}.spm.spatial.preproc.tissue(4).native = [1 0];
     matlabbatch{i*2}.spm.spatial.preproc.tissue(4).warped = [0 0];
-    matlabbatch{i*2}.spm.spatial.preproc.tissue(5).tpm = {'D:\matlabTools\spm12\tpm\TPM.nii,5'};
+    matlabbatch{i*2}.spm.spatial.preproc.tissue(5).tpm = {[tpm_path, ',5']};
     matlabbatch{i*2}.spm.spatial.preproc.tissue(5).ngaus = 4;
     matlabbatch{i*2}.spm.spatial.preproc.tissue(5).native = [1 0];
     matlabbatch{i*2}.spm.spatial.preproc.tissue(5).warped = [0 0];
-    matlabbatch{i*2}.spm.spatial.preproc.tissue(6).tpm = {'D:\matlabTools\spm12\tpm\TPM.nii,6'};
+    matlabbatch{i*2}.spm.spatial.preproc.tissue(6).tpm = {[tpm_path, ',6']};
     matlabbatch{i*2}.spm.spatial.preproc.tissue(6).ngaus = 2;
     matlabbatch{i*2}.spm.spatial.preproc.tissue(6).native = [0 0];
     matlabbatch{i*2}.spm.spatial.preproc.tissue(6).warped = [0 0];
