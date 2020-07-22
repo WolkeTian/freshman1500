@@ -55,6 +55,23 @@ for i = 1:numel(sublist)
 end
 
 toc;
+
+%% move alff files
+sourcefolder = 'F:\fMRI1500\Conn\conn_fMRI1500\results\firstlevel\V2V_01\';
+zALFFs = dir([sourcefolder, 'BETA_Subject*.nii']);
+
+tic;
+for i = 1:numel(sublist)
+    subid = sublist(i,1).name;
+    
+    % copy preprocessed & denoised Rest niftis
+    destination = [todir, '\zALFF\', 'zALFF_', subid, '.nii'];
+    source = fullfile(zALFFs(i,1).folder, zALFFs(i,1).name);
+    movefile(source, destination);
+
+    
+end
+toc;
     
     
 
