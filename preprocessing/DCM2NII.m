@@ -13,9 +13,6 @@ subids = cellfun(@(x) x{end}, subids, 'UniformOutput', false);
 
 %% 开始转换需要的文件
 parfor i = 1:numel(subids)
-    if strcmp(subids{i}, '00646') || strcmp(subids{i}, '00170') % 两个数据不全的被试跳过
-        continue
-    else
         % 检查该被试nii文件是否已经存在
         topath = 'F:\fMRI1500\Niftis\';
         totestpath = [topath, 'Sub', subids{i} ,'\fieldmap\rest2\*field*'];
@@ -33,12 +30,20 @@ parfor i = 1:numel(subids)
             rest_dir = dir([child_fullpath,'\*BOLD*REST*']);
             rest_fullpath = [rest_dir(end,1).folder,'\', rest_dir(end,1).name];
             % obtain resting-state fieldmaps path
-            fmap_dir = dir([child_fullpath,'\*FIELD_MAPPING*REST*']);
+            fmap_dir = dir([child_fullpath,'\*FIELD*REST*']);
             fmap1_fullpath = [fmap_dir(1,1).folder,'\', fmap_dir(1,1).name];
             fmap2_fullpath = [fmap_dir(2,1).folder,'\', fmap_dir(2,1).name];
             % obtain anat path
             t1_dir = dir([child_fullpath,'\T1_MPRAGE*']);
             t1_fullpath = [t1_dir(end,1).folder,'\', t1_dir(end,1).name];
+            
+            % obtain dwi path
+            dwi_dir = dir([child_fullpath,'\*HARDI_00*']);
+            dwi_fullpath = [dwi_dir(end,1).folder,'\', dwi_dir(end,1).name];
+            % obtain dwi fieldmaps path
+            fmap_dwi_dir = dir([child_fullpath,'\*FIELD*HARDI*']);
+            fmap1_dwi_fullpath = [fmap_dwi_dir(1,1).folder,'\', fmap_dwi_dir(1,1).name];
+            fmap2_dwi_fullpath = [fmap_dwi_dir(2,1).folder,'\', fmap_dwi_dir(2,1).name];
 
             %% part of writting
             % create destination folder
@@ -49,6 +54,9 @@ parfor i = 1:numel(subids)
             tot1path = [tosubpath, '\', 'anat'];
             tofmap1path = [tosubpath, '\', 'fieldmap\rest1'];
             tofmap2path = [tosubpath, '\', 'fieldmap\rest2'];
+            todwipath = [tosubpath, '\', 'dwi'];
+            todwifmap1path = [tosubpath, '\', 'fieldmap\dwi1'];
+            todwifmap2path = [tosubpath, '\', 'fieldmap\dwi2'];
 
             mkdir(torestpath); mkdir(tot1path); mkdir(tofmap1path); mkdir(tofmap2path);
             % 开始转换至nifti格式
@@ -66,12 +74,19 @@ parfor i = 1:numel(subids)
             [~,~] = dos(thecommand);
             thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', tofmap2path, ' -f "%t_%p_%s" ', fmap2_fullpath];
             [~,~] = dos(thecommand);
+            
+             % convert dwi images
+            thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', todwipath, ' -f "%t_%p_%s" ', dwi_fullpath];
+            [~,~] = dos(thecommand); % [status,cmdout] = dos(command); 避免输出
+            % convert dwi filedmaps images
+            thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', todwifmap1path, ' -f "%t_%p_%s" ', fmap1_dwi_fullpath];
+            [~,~] = dos(thecommand);
+            thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', todwifmap2path, ' -f "%t_%p_%s" ', fmap2_dwi_fullpath];
+            [~,~] = dos(thecommand);
 
             % display successful information 
             disp(['Sub',subids{i},' converted successfully']);
         end
-       
-    end
        
 end
 
@@ -79,9 +94,6 @@ toc;
 
 %% Check if the number of converted files is normal
 for i = 1:numel(subids)
-    if strcmp(subids{i}, '00646') || strcmp(subids{i}, '00170') % 两个数据不全的被试跳过
-        continue
-    else
         topath = 'F:\fMRI1500\Niftis\';
         
         totestpath = [topath, 'Sub', subids{i} ,'\rest\*bold*'];
@@ -107,6 +119,4 @@ for i = 1:numel(subids)
         if numel(existdir) ~= 2
             disp(['check ',subids{i},' fieldmap rest2 num of files ']);
         end
-        
-    end
 end
