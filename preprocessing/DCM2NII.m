@@ -12,12 +12,13 @@ subids = cellfun(@(x) split(x,'_'),names,'UniformOutput', false);
 subids = cellfun(@(x) x{end}, subids, 'UniformOutput', false);
 
 %% 开始转换需要的文件
+failed = [];
 parfor i = 1:numel(subids)
         % 检查该被试nii文件是否已经存在
         topath = 'F:\fMRI1500\Niftis\';
         totestpath = [topath, 'Sub', subids{i} ,'\fieldmap\rest2\*field*'];
         existdir = dir(totestpath);
-               
+        try       
         if numel(existdir) ~= 0
             disp(['sub', subids{i},'已转换,不在重复转换']);
             continue % 如果已经转换完成，则跳到下一个被试
@@ -38,7 +39,7 @@ parfor i = 1:numel(subids)
             t1_fullpath = [t1_dir(end,1).folder,'\', t1_dir(end,1).name];
             
             % obtain dwi path
-            dwi_dir = dir([child_fullpath,'\*HARDI_00*']);
+            dwi_dir = dir([child_fullpath,'\*DIFF_HARDI_00*']);
             dwi_fullpath = [dwi_dir(end,1).folder,'\', dwi_dir(end,1).name];
             % obtain dwi fieldmaps path
             fmap_dwi_dir = dir([child_fullpath,'\*FIELD*HARDI*']);
@@ -87,7 +88,9 @@ parfor i = 1:numel(subids)
             % display successful information 
             disp(['Sub',subids{i},' converted successfully']);
         end
-       
+       catch
+       failed = [failed,subids{i}];
+       end
 end
 
 toc;
