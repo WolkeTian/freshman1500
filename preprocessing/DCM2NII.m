@@ -1,5 +1,6 @@
 clear;close;clc;
 path = 'H:\';
+topath = 'F:\fMRI1500\Niftis\';
 tic;
 
 %% prepration
@@ -48,7 +49,7 @@ parfor i = 1:numel(subids)
 
             %% part of writting
             % create destination folder
-            topath = 'F:\fMRI1500\Niftis\';
+            % topath = 'F:\fMRI1500\Niftis\';
             tosubpath = [topath, 'Sub', subids{i}];
             mkdir(tosubpath);
             torestpath = [tosubpath, '\', 'rest'];
@@ -96,30 +97,30 @@ end
 toc;
 
 %% Check if the number of converted files is normal
-for i = 1:numel(subids)
-        topath = 'F:\fMRI1500\Niftis\';
-        
-        totestpath = [topath, 'Sub', subids{i} ,'\rest\*bold*'];
-        existdir = dir(totestpath);
-        if numel(existdir) ~= 2
-            disp(['check ',subids{i},' rest num of files ']);
-        end
-        
-        totestpath = [topath, 'Sub', subids{i} ,'\anat\*t1*'];
-        existdir = dir(totestpath);
-        if numel(existdir) ~= 2
-            disp(['check ',subids{i},' anat num of files ']);
-        end
-        
-        totestpath = [topath, 'Sub', subids{i} ,'\fieldmap\rest1\*field*'];
-        existdir = dir(totestpath);
-        if numel(existdir) ~= 4
-            disp(['check ',subids{i},' fieldmap rest1 num of files ']);
-        end
-        
-        totestpath = [topath, 'Sub', subids{i} ,'\fieldmap\rest2\*field*'];
-        existdir = dir(totestpath);
-        if numel(existdir) ~= 2
-            disp(['check ',subids{i},' fieldmap rest2 num of files ']);
-        end
-end
+% for i = 1:numel(subids)
+%         % topath = 'F:\fMRI1500\Niftis\';
+%         
+%         totestpath = [topath, 'Sub', subids{i} ,'\rest\*bold*'];
+%         existdir = dir(totestpath);
+%         if numel(existdir) ~= 2
+%             disp(['check ',subids{i},' rest num of files ']);
+%         end
+%         
+%         totestpath = [topath, 'Sub', subids{i} ,'\anat\*t1*'];
+%         existdir = dir(totestpath);
+%         if numel(existdir) ~= 2
+%             disp(['check ',subids{i},' anat num of files ']);
+%         end
+%         
+%         totestpath = [topath, 'Sub', subids{i} ,'\fieldmap\rest1\*field*'];
+%         existdir = dir(totestpath);
+%         if numel(existdir) ~= 4
+%             disp(['check ',subids{i},' fieldmap rest1 num of files ']);
+%         end
+%         
+%         totestpath = [topath, 'Sub', subids{i} ,'\fieldmap\rest2\*field*'];
+%         existdir = dir(totestpath);
+%         if numel(existdir) ~= 2
+%             disp(['check ',subids{i},' fieldmap rest2 num of files ']);
+%         end
+% end
