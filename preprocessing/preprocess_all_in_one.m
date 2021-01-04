@@ -53,8 +53,9 @@ parfor i = 1:numel(subids)
             tot1path = [tosubpath, '\', 'anat'];
             tofmap1path = [tosubpath, '\', 'fieldmap\rest1'];
             tofmap2path = [tosubpath, '\', 'fieldmap\rest2'];
-
-            mkdir(torestpath); mkdir(tot1path); mkdir(tofmap1path); mkdir(tofmap2path);
+            
+            cellfun(@(x) mkdir(x), {torestpath, tot1path, tofmap1path, tofmap2path});
+            %cellfun(@(x) mkdir(x), {torestpath, tot1path, tofmap1path, tofmap2path, todwipath, todwifmap1path, todwifmap2path});
             % 开始转换至nifti格式
             % cmd格式: Dcm2niix路径  option 输出文件夹 文件名 输入文件夹
             % 如："D:\Programs\mricrogl\dcm2niix" -b y -z y -o E:\prisma_prep_data\dpabi_test\FunImg\sub01...
