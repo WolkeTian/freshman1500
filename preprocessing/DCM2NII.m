@@ -16,7 +16,7 @@ subids = cellfun(@(x) x{end}, subids, 'UniformOutput', false);
 failed = [];
 parfor i = 1:numel(subids)
         % 检查该被试nii文件是否已经存在
-        topath = 'F:\fMRI1500\Niftis\';
+
         totestpath = [topath, 'Sub', subids{i} ,'\fieldmap\rest2\*field*'];
         existdir = dir(totestpath);
         try       
@@ -60,7 +60,8 @@ parfor i = 1:numel(subids)
             todwifmap1path = [tosubpath, '\', 'fieldmap\dwi1'];
             todwifmap2path = [tosubpath, '\', 'fieldmap\dwi2'];
 
-            mkdir(torestpath); mkdir(tot1path); mkdir(tofmap1path); mkdir(tofmap2path);
+            % mkdir(torestpath); mkdir(tot1path); mkdir(tofmap1path); mkdir(tofmap2path);
+            cellfun(@(x) mkdir(x), {torestpath, tot1path, tofmap1path, tofmap2path, todwipath, todwifmap1path, todwifmap2path});
             % 开始转换至nifti格式
             % cmd格式: Dcm2niix路径  option 输出文件夹 文件名 输入文件夹
             % 如："D:\Programs\mricrogl\dcm2niix" -b y -z y -o E:\prisma_prep_data\dpabi_test\FunImg\sub01...
