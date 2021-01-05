@@ -44,5 +44,12 @@ parfor i = 1:numel(matlabbatch)
     end
 end
 toc;
+
+
+function stimes = readslicetimes(filename)
+    val = jsondecode(fileread(filename));
+    stimes = val.SliceTiming; % unit to second
+    stimes = stimes * 1000;
+end
     
     
