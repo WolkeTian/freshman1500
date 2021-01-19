@@ -8,3 +8,4 @@ spm_jobman('initcfg');
 niigzs = spm_select('FPListRec', direc, '.*\.nii\.gz$'); % obtain images path
 niigzs = cellstr(niigzs);
 tic;cellfun(@gunzip, niigzs);toc;
+% tic;cellfun(@delete, niigzs);toc;
