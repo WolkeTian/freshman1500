@@ -1,7 +1,7 @@
 clear;close;clc;
 tic;
 %% prepare files path
-path = 'E:\2020fall_fMRI\Niftis';
+path = 'F:\fMRI1500\Niftis';
 cd(path);
 rpfiles = dir([path, '\Sub0*\rest\rp_*.txt']);
 test = load(fullfile(rpfiles(1,1).folder, rpfiles(1,1).name));
