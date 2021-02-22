@@ -15,7 +15,7 @@ csffiles = cellstr(spm_select('FPListRec', direc, '^c320.*t1_mprage.*\.nii$'));
 % 获取所有灰质/白质/脑脊液解剖图像
 
 %% create batch
-matlabbatch{1}.spm.tools.dartel.mni_norm.template = {'C:\Users\sherf\Desktop\anat\Template_6.nii'};
+matlabbatch{1}.spm.tools.dartel.mni_norm.template = Template;
 matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.flowfields = flowfields;
 matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.images = {
                                                                   gmfiles;
