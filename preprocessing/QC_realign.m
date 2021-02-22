@@ -1,9 +1,9 @@
 clear;close;clc;
 tic;
 %% prepare files path
-path = 'F:\fMRI1500\Niftis';
+path = 'E:\2020fall_fMRI\Niftis';
 cd(path);
-rpfiles = dir([path, '\Sub0*\rest\rp_a*.txt']);
+rpfiles = dir([path, '\Sub0*\rest\rp_*.txt']);
 test = load(fullfile(rpfiles(1,1).folder, rpfiles(1,1).name));
 [dima,dimb] = size(test); % acquire dimension number
 
@@ -14,7 +14,7 @@ degreed_rps = zeros(numel(rpfiles), dima, dimb);
 [max_abs_motions, max_FDs, mean_FDs] = deal(zeros(numel(rpfiles),1));
 subids = cell(numel(rpfiles),1);
 
-clear test dimb
+% clear test dimb
 %% load and convert units (radians to degrees)
 for i = 1:numel(rpfiles)
     cd(rpfiles(i,1).folder);
@@ -34,38 +34,60 @@ for i = 1:numel(rpfiles)
     FD_fname = 'FrameDisplacement.txt';
     writematrix(FD, FD_fname); % save FD values to file
     [max_FDs(i), mean_FDs(i)] = deal(max(FD), mean(FD));
-%     All_FDs(:,i) = FD;
+    All_FDs(:,i) = FD;
     %% create scrub regressors for FD >= 0.5mm 
-%     thrd = 0.5;
+    thrd = 0.5;
 %     scrub_fname = ['FD_scrub_files\','FD_scrub_', num2str(thrd), 'mm_', fname];
-%     toScrub = find(FD >= thrd);
-%     if isempty(toScrub) % if no frame outlier
-%         writematrix(toScrub, scrub_fname); % write null to file
-%     else
-%         regressors = zeros(dima, numel(toScrub));
-%         % creat one column regressor for each outlier
-%         for j = 1:numel(toScrub)
-%             regressors(toScrub(j),j) = 1;
-%         end
-%         writematrix(regressors, scrub_fname); % write regressors to file
-%     end
+    scrub_fname = ['FD_scrub_', num2str(thrd), 'mm.txt'];
+    toScrub = find(FD >= thrd);
+    if isempty(toScrub) % if no frame outlier
+        writematrix(toScrub, scrub_fname); % write null to file
+    else
+        regressors = zeros(dima, numel(toScrub));
+        % creat one column regressor for each outlier
+        for j = 1:numel(toScrub)
+            regressors(toScrub(j),j) = 1;
+        end
+        writematrix(regressors, scrub_fname); % write regressors to file
+    end
     
     %% create temporal mask for FD >= 0.5mm
 %     mask_fname = ['FD_temporalmask_files\', 'FD_temporalmask_', num2str(thrd), 'mm_', fname];
-%     tomask = FD >= thrd;
-%     % mark also the frames 1 back and 2 forward from any marked frames
-%     mask_back1 = [tomask(2:end);0]; mask_forward1 = [0;tomask(1:end-1)];mask_forward2 = [0;0;tomask(1:end-2)]; 
-%     tempmask = tomask + mask_back1 + mask_forward2 + mask_forward1; 
-%     tempmask = double(tempmask == 0);% adjust to binary
-%     writematrix(tempmask, mask_fname);
-%     
+    mask_fname = ['FD_temporalmask_', num2str(thrd), 'mm.txt'];
+    tomask = FD >= thrd;
+    % mark also the frames back and 2 forward from any marked frames
+    % i.e., one before and two after bad frame
+    mask_back1 = [tomask(2:end);0]; mask_forward1 = [0;tomask(1:end-1)];mask_forward2 = [0;0;tomask(1:end-2)]; 
+    tempmask = tomask + mask_back1 + mask_forward2 + mask_forward1; 
+    tempmask = double(tempmask == 0);% adjust to binary
+    writematrix(tempmask, mask_fname);
     
-%     %% Friston 24 calculations [rp rp^2 rp(t-1) rp(t-1)^2]; Friston 1996; Power 2014.
-% %     Friston_fname = ['Friston24_files\','Friston24_', fname];
-%     Friston_fname = 'Friston24_Parameters.txt';
-%     rp_back1 = [zeros(1,6); radians_rp(1:end - 1, :)];
-%     Friston24 = [radians_rp, radians_rp .^ 2, rp_back1, rp_back1.^2];
-%     writematrix(Friston24, Friston_fname);
+    % create box function to scrub bad frames; 
+    % one column regressor for one frame to scrub
+    tempmask = 1- tempmask; % 1 for to scrub; 0 for not;
+    columns = sum(tempmask); % regressor's column number
+    if columns ~= 0 % if have bad frames
+        box_funcs = zeros(dima, columns);
+        indexs = find(tempmask == 1);
+        for i = 1:columns
+            temp = zeros(dima, 1);
+            temp(indexs(i)) = 1;
+            box_funcs(:,i) = temp;
+        end
+    else
+        box_funcs = []; % if no, null set
+    end
+    boxfuncs_fname = ['boxfunc_FD_scrub_', num2str(thrd), 'mm.txt'];
+    writematrix(box_funcs, boxfuncs_fname);
+%     save boxfunc_FD_scrub box_funcs
+
+    
+    %% Friston 24 calculations [rp rp^2 rp(t-1) rp(t-1)^2]; Friston 1996; Power 2014.
+%     Friston_fname = ['Friston24_files\','Friston24_', fname];
+    Friston_fname = 'Friston24_Parameters.txt';
+    rp_back1 = [zeros(1,6); radians_rp(1:end - 1, :)];
+    Friston24 = [radians_rp, radians_rp .^ 2, rp_back1, rp_back1.^2];
+    writematrix(Friston24, Friston_fname);
     %% 24 headmotion parameters, [rp rp' rp^2  rp'^2]; Satterthwaite et al., 2013.
     HMP24_fname = 'Headmotionparameters24.txt';
     HMP24 = [radians_rp, HMP_1st, radians_rp .^2,HMP_1st .^2];
@@ -77,8 +99,8 @@ for i = 1:numel(rpfiles)
 %     degreed_rps(i,:,:) = degreed_rp;
 end
 
-% histogram(max_motions);
-% histogram(mean_FDs);
+histogram(max_abs_motions);
+histogram(mean_FDs);
 
 %% list subid by exclusion criterion
 criterion = 2; % absolute motion > 2 mm or 2 degree
