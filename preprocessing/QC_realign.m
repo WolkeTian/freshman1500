@@ -82,12 +82,13 @@ for i = 1:numel(rpfiles)
 %     save boxfunc_FD_scrub box_funcs
 
     
-    %% Friston 24 calculations [rp rp^2 rp(t-1) rp(t-1)^2]; Friston 1996; Power 2014.
+%    %% Friston 24 calculations [rp rp^2 rp(t-1) rp(t-1)^2]; Friston 1996; Power 2014.
 %     Friston_fname = ['Friston24_files\','Friston24_', fname];
-    Friston_fname = 'Friston24_Parameters.txt';
-    rp_back1 = [zeros(1,6); radians_rp(1:end - 1, :)];
-    Friston24 = [radians_rp, radians_rp .^ 2, rp_back1, rp_back1.^2];
-    writematrix(Friston24, Friston_fname);
+%    Friston_fname = 'Friston24_Parameters.txt';
+%    rp_back1 = [zeros(1,6); radians_rp(1:end - 1, :)];
+%    Friston24 = [radians_rp, radians_rp .^ 2, rp_back1, rp_back1.^2];
+%    writematrix(Friston24, Friston_fname);
+
     %% 24 headmotion parameters, [rp rp' rp^2  rp'^2]; Satterthwaite et al., 2013.
     HMP24_fname = 'Headmotionparameters24.txt';
     HMP24 = [radians_rp, HMP_1st, radians_rp .^2,HMP_1st .^2];
