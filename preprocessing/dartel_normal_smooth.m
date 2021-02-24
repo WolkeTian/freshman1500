@@ -37,3 +37,25 @@ fprintf('%-40s:', 'Excutingg spm batch...');
 tic;
 spm_jobman('run',matlabbatch);
 toc;
+
+
+%% create batch for no smooth only normlise
+clear matlabbatch
+matlabbatch{1}.spm.tools.dartel.mni_norm.template = {'F:\fMRI1500\Niftis\Sub00001\anat\Template_6.nii'};
+for i = 1:numel(flowfiles)
+    matlabbatch{1}.spm.tools.dartel.mni_norm.data.subj(i).flowfield = flowfiles(i);
+    matlabbatch{1}.spm.tools.dartel.mni_norm.data.subj(i).images = restfiles(i);
+end
+
+matlabbatch{1}.spm.tools.dartel.mni_norm.vox = [2 2 2]; % set to [2 2 2], near the original resolution;
+matlabbatch{1}.spm.tools.dartel.mni_norm.bb = [NaN NaN NaN
+                                               NaN NaN NaN];
+matlabbatch{1}.spm.tools.dartel.mni_norm.preserve = 0;
+matlabbatch{1}.spm.tools.dartel.mni_norm.fwhm = [0 0 0];
+
+save dartelNormal matlabbatch
+%% excute batch
+fprintf('%-40s:', 'Excutingg spm batch...');
+tic;
+spm_jobman('run',matlabbatch);
+toc;
