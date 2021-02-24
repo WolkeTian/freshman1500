@@ -237,7 +237,6 @@ end
 % save('filedmap.mat','matlabbatch');
 %% excute matlabbatch
 
-parpool
 fprintf('%-40s:', 'Excutingg spm batch...');
 tic;
 parfor i = 1:numel(magfiles)
