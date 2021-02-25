@@ -75,11 +75,11 @@ for i = 1:numel(rpfiles)
             box_funcs(:,i) = temp;
         end
     else
-        box_funcs = []; % if no, null set
+        box_funcs = zeros(dima, 0); % if no, null set
     end
     boxfuncs_fname = ['boxfunc_FD_scrub_', num2str(thrd), 'mm.txt'];
-    writematrix(box_funcs, boxfuncs_fname);
-%     save boxfunc_FD_scrub box_funcs
+%   writematrix(box_funcs, boxfuncs_fname);
+    save boxfunc_FD_scrub box_funcs
 
     
 %    %% Friston 24 calculations [rp rp^2 rp(t-1) rp(t-1)^2]; Friston 1996; Power 2014.
