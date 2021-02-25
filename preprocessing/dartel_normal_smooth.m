@@ -15,12 +15,12 @@ flowfiles = cellstr(spm_select('FPListRec', direc, '^u_rc1.*\.nii$'));
 restfiles = cellstr(spm_select('FPListRec', direc, '^ua20.*\.nii$'));
 % obtain all relignmented resting-state images
 
+Template = cellstr(spm_select('FPListRec', direc, '^Template_6.nii$')); 
 
 
 %% create batch
 
-matlabbatch{1}.spm.tools.dartel.mni_norm.template = {'F:\fMRI1500\Niftis\Sub00001\anat\Template_6.nii'};
-for i = 1:numel(flowfiles)
+matlabbatch{1}.spm.tools.dartel.mni_norm.template = Template;
     matlabbatch{1}.spm.tools.dartel.mni_norm.data.subj(i).flowfield = flowfiles(i);
     matlabbatch{1}.spm.tools.dartel.mni_norm.data.subj(i).images = restfiles(i);
 end
@@ -41,7 +41,7 @@ toc;
 
 %% create batch for no smooth only normlise
 clear matlabbatch
-matlabbatch{1}.spm.tools.dartel.mni_norm.template = {'F:\fMRI1500\Niftis\Sub00001\anat\Template_6.nii'};
+matlabbatch{1}.spm.tools.dartel.mni_norm.template = Template;
 for i = 1:numel(flowfiles)
     matlabbatch{1}.spm.tools.dartel.mni_norm.data.subj(i).flowfield = flowfiles(i);
     matlabbatch{1}.spm.tools.dartel.mni_norm.data.subj(i).images = restfiles(i);
