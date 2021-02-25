@@ -17,16 +17,39 @@ csffiles = cellstr(spm_select('FPListRec', direc, '^c320.*t1_mprage.*\.nii$'));
 %% create batch
 matlabbatch{1}.spm.tools.dartel.mni_norm.template = Template;
 matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.flowfields = flowfields;
+% matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.images = {
+%                                                                   gmfiles;
+%                                                                   wmfiles;
+%                                                                   csffiles
+%                                                                   };
 matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.images = {
-                                                                  gmfiles;
-                                                                  wmfiles;
-                                                                  csffiles
+                                                                  gmfiles
                                                                   };
+
 matlabbatch{1}.spm.tools.dartel.mni_norm.vox = [NaN NaN NaN];
 matlabbatch{1}.spm.tools.dartel.mni_norm.bb = [NaN NaN NaN
                                                    NaN NaN NaN];
 matlabbatch{1}.spm.tools.dartel.mni_norm.preserve = 1; % for VBM: Preserve Amount
 matlabbatch{1}.spm.tools.dartel.mni_norm.fwhm = [6 6 6];
+
+
+%% excute batch
+tic; out = spm_jobman('run',matlabbatch); toc;
+%% create batch
+clear matlabbatch
+matlabbatch{1}.spm.tools.dartel.mni_norm.template = Template;
+matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.flowfields = flowfields;
+matlabbatch{1}.spm.tools.dartel.mni_norm.data.subjs.images = {
+                                                                  wmfiles;
+                                                                  csffiles
+                                                                  };
+
+
+matlabbatch{1}.spm.tools.dartel.mni_norm.vox = [NaN NaN NaN];
+matlabbatch{1}.spm.tools.dartel.mni_norm.bb = [NaN NaN NaN
+                                                   NaN NaN NaN];
+matlabbatch{1}.spm.tools.dartel.mni_norm.preserve = 1; % for VBM: Preserve Amount
+matlabbatch{1}.spm.tools.dartel.mni_norm.fwhm = [2 2 2]; % for aCompCor mask
 
 
 %% excute batch
