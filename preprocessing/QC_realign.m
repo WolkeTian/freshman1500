@@ -69,10 +69,10 @@ for i = 1:numel(rpfiles)
     if columns ~= 0 % if have bad frames
         box_funcs = zeros(dima, columns);
         indexs = find(tempmask == 1);
-        for i = 1:columns
+        for n = 1:columns
             temp = zeros(dima, 1);
-            temp(indexs(i)) = 1;
-            box_funcs(:,i) = temp;
+            temp(indexs(n)) = 1;
+            box_funcs(:,n) = temp;
         end
     else
         box_funcs = zeros(dima, 0); % if no, null set
