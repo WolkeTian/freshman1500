@@ -1,18 +1,19 @@
 %% load ROI-ROI correlation matrix (calculated with conn)
-path = 'F:\fMRI1500\script\postprocess\';
+clear;clc;
+%path = 'F:\fMRI_第三批804人\Results\power\';
+path = 'F:\fMRI_第一批1113人\Results\dosen\';
+load([path, 'FNC_matrix.mat']);
+fncs = FNC_matrix;
+subnums = size(fncs, 3);
 
-ConnMatrix = squeeze(niftiread([path, 'ConnMatrix.nii']));
-% save ConnMatrix ConnMatrix sub_valid;
 
-
-%% get subject numbers
-load sub_QC_lists.mat
-subnums = numel(sub_valid);
 
 %% extract connectivity and reorder
-Label264 = importdata('Power_Neuron_264ROIs_Radius5_Mask.txt');
-labels = unique(Label264); % find network names
+%Labelnames = importdata('F:\Power_Neuron_264ROIs_Radius5_Mask.txt');
+Labelnames = importdata('F:\Dosenbach_Science_160ROIs_Radius5_Mask.txt');
 
+labels = unique(Labelnames); % find network names
+% PowerNets = struct(numel(labels), 1);
 NewOrder = [];
 nodesNums = [];
 nodesNames = {};
@@ -20,7 +21,7 @@ nodesStartIndex = [];
 for i = 1:numel(labels)
     % create struct to save every network's name and index in 264 ROIs
     PowerNets(i,1).name = labels(i);
-    PowerNets(i,1).index = find(strcmp(labels{i}, Label264));
+    PowerNets(i,1).index = find(strcmp(labels{i}, Labelnames));
     NewOrder = [NewOrder; PowerNets(i,1).index]; % reorder by Network label
     nodesStartIndex = [nodesStartIndex, sum(nodesNums) + 1]; % 得到每个网络对应的起始index
         
@@ -29,16 +30,21 @@ for i = 1:numel(labels)
     nodesNames = [nodesNames;labels(i)];% 得到每个网络对应的名字
 end
 nodesEndIndex = nodesStartIndex + nodesNums - 1;
-NewMatrix = ConnMatrix(NewOrder, NewOrder, :);
+% NewMatrix = ConnMatrix(NewOrder, NewOrder, :);
+NewMatrix = fncs(NewOrder, NewOrder, :);
 
 meanMatrix = mean(NewMatrix, 3);
 
 imagesc(meanMatrix); colormap jet; colorbar;
 title('Mean Correlation Matrix');
 % 更改坐标刻度值和标签
-xticks(nodesStartIndex); xtickangle(45); xticklabels(nodesNames);
+xticks(nodesStartIndex);
+xtickangle(45);
+xticklabels(nodesNames);
 
-yticks(nodesStartIndex); ytickangle(45); yticklabels(nodesNames);
+yticks(nodesStartIndex);
+ytickangle(45);
+yticklabels(nodesNames);
 
 % save fig
 saveas(gcf,'meanCorrelationMatrix.jpg');
@@ -48,7 +54,7 @@ meanWithin_Nets = zeros(subnums, numel(labels));
 for i = 1:numel(labels)
     withinMatrix = NewMatrix(nodesStartIndex(i) : nodesEndIndex(i), nodesStartIndex(i) : nodesEndIndex(i), :);
     withinMatrix(isnan(withinMatrix)) = [];
-    withinMatrix = reshape(withinMatrix, nodesNums(i) * (nodesNums(i) - 1), 919);
+    withinMatrix = reshape(withinMatrix, nodesNums(i) * (nodesNums(i) - 1), subnums);
     meanWithin = mean(withinMatrix, 1)';
     PowerNets(i,1).within = meanWithin;
     meanWithin_Nets(:,i) = meanWithin;
@@ -80,7 +86,7 @@ for m = 1:subnums
    uniqueMeans(m, :) = Unique_submMeans;
 end
 
-%% write to table
+%% write 2 table
 tabletitle = [labels',uniqueLabels];
 tablecontent = [meanWithin_Nets, uniqueMeans];
 tablecontent = num2cell(tablecontent);
