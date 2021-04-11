@@ -21,6 +21,7 @@ Template = cellstr(spm_select('FPListRec', direc, '^Template_6.nii$'));
 %% create batch
 
 matlabbatch{1}.spm.tools.dartel.mni_norm.template = Template;
+for i = 1:numel(flowfiles)
     matlabbatch{1}.spm.tools.dartel.mni_norm.data.subj(i).flowfield = flowfiles(i);
     matlabbatch{1}.spm.tools.dartel.mni_norm.data.subj(i).images = restfiles(i);
 end
