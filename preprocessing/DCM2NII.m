@@ -71,6 +71,10 @@ parfor i = 1:numel(subids)
             [~,~] = dos(thecommand); % [status,cmdout] = dos(command); 避免输出
              % convert anat images
             thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', tot1path, ' -f "%t_%p_%s" ', t1_fullpath];
+            
+             % convert anat images and crop neck (add -x y)
+            thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -x y -z y -o ', tot1path, ' -f "%t_%p_%s" ', t1_fullpath];
+            
             [~,~] = dos(thecommand);
             % convert filedmaps images
             thecommand = ['"D:\Programs\mricrogl\dcm2niix" ', '-b y -z y -o ', tofmap1path, ' -f "%t_%p_%s" ', fmap1_fullpath];
